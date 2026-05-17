@@ -1,14 +1,15 @@
 
 import { useState } from "react";
-import {Text, View, Image, TouchableOpacity, StyleSheet} from "react-native";
+import {Text, View, Image, TouchableOpacity, StyleSheet, Platform, Pressable} from "react-native";
 import { VideoPlayer} from "@/components/VideoPlayer";
 import EmbedFrame from "@/components/EmbedFrame";
 import { type Apod } from "@/lib/apod-types";
+import { Link } from "expo-router";
 
 
-export function ApodItem({ item }: { item: Apod }) {
+export function ApodItem({ item, handleClick }: { item: Apod, handleClick: () => void }) {
     const [desc, setDesc] = useState(false);
-    const isVideoMp4 = item.media_type === 'video' && item.url.endsWith('.mp4');
+    // const isVideoMp4 = item.media_type === 'video' && item.url.endsWith('.mp4');
 
     return (
         <View style={styles.container} >
@@ -24,14 +25,7 @@ export function ApodItem({ item }: { item: Apod }) {
                 ? <iframe  src= {item.url} title={item.title} />
                 : <img src={item.url} className="size-auto" />
             } */}
-            {/* {item.media_type === 'video'
-                ? <Text>{item.title}</Text>
-                : <Image source={{ uri: item.url }} style={{ width: 400, height: 400 }} />} */}
-            { isVideoMp4 
-                ?  <VideoPlayer src={item.url} /> //<Text>{item.url}</Text> 
-                : item.media_type === 'video'
-                    ? <EmbedFrame url={item.url} /> //<Text>{item.url}</Text> //
-                    : <Image source={{ uri: item.url }} style={{ width:'100%', height: 400 }} />}
+            <ApodMedia item={item} handleClick={handleClick} />
             <View style={{ marginVertical: 8 }} >
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }} >
                     <Text style={{ marginRight: 4 }}>Explanation</Text>
@@ -46,13 +40,37 @@ export function ApodItem({ item }: { item: Apod }) {
     )
 }
 
+const ApodMedia = ({ item, handleClick }: { item: Apod, handleClick: () => void }) => {
+    const isVideoMp4 = item.url.endsWith('.mp4');
+    if (item.media_type === 'image') {
+        return <Image source={{ uri: item.url }} style={{ width: '100%', height: 400 }} />
+    }
+    if (Platform.OS !== 'web') {
+        return (
+            <View>
+                {isVideoMp4
+                    ? <Text onPress={handleClick} style={styles.touchableText}> Play Video MP4</Text>
+                    : <Link href={`https://www.youtube.com/watch?v=${item.url.split("/").pop()?.slice(0, 11)}`}><Text style={styles.touchableText}>Watch Video on Youtube</Text></Link>
+                }
+            </View>
+        )
+    } 
+    return (
+        <View>
+            {isVideoMp4
+                ? <VideoPlayer src={item.url} />
+                : <EmbedFrame url={item.url} />                  
+            }
+        </View>
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: '#cdcdcd',
       alignItems: 'flex-start',
-      justifyContent: 'center',
+      justifyContent: 'flex-start',
       overflow: 'hidden',
       padding: 4,
       gap: 4,
@@ -74,4 +92,11 @@ const styles = StyleSheet.create({
       borderRadius: 4,
       padding: 4,
     },
+    touchableText: {
+        width: '100%',
+        color: 'blue',
+        fontStyle: 'italic',
+        textAlign: 'center',
+        textDecorationLine: 'underline'
+    }
   });  
