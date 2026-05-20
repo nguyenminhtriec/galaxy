@@ -1,27 +1,26 @@
 
-
 'use client';
 
-
-import { useState } from "react";
-// import { ChevronRight, ChevronDown } from "lucide-react";
-import {Text, View, Image, TouchableOpacity, StyleSheet} from "react-native";
-import { FlatList, Pressable} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, Platform} from "react-native";
 import { WebDatePicker, NativeDatePicker} from "@/components/MyDatePicker";
-import { Platform } from 'react-native';
 import { type Apod } from "@/lib/apod-types";
 import { ApodItem } from "@/components/ApodItem";
-import { useApod } from "@/lib/apod-context";
+import { useEffect, useState } from "react";
+import { useVideo } from "@/lib/apod-context";
 import { useRouter } from "expo-router";
+import { useWindowDimensions } from 'react-native';
+// import { ChevronRight, ChevronDown } from "lucide-react";
 
 export default function Apod() {
     const [startDate, setStartDate] = useState('2026-01-01');
     const [apod, setApod] = useState<Apod[]>([]);
     const [showingCalendar, setShowingCalendar] = useState(false);
     const router = useRouter();
-    const { setSelectedApod } = useApod();
+    const { setSelectedVideo } = useVideo();
 
-    //const baseUrl = process.env.EXPO_PUBLIC_TTW_API_BASE_URL  //'https://ttwapi.vercel.app';
+    const windowWidth = useWindowDimensions().width;
+    const [columnCount, setColumnCount] = useState(1);
+    
 
     const getPicture = async () => {
         const apodResponse = await fetch(`/apod/apod`, {
@@ -40,14 +39,31 @@ export default function Apod() {
         setApod(data);
     }
 
-    const handleApodClick = (apod: Apod) => {
-        setSelectedApod(apod);
+    const handleVideoClick = (apod: Apod) => {
+        setSelectedVideo(apod.url);
         router.push(`./apod/${apod.date}`);
     }
 
+    const showRandomPicture = () => {
+        let futureDate = new Date("2030-01-01");
+        futureDate.setDate(futureDate.getDate() + Math.floor(Math.random() * 365));
+        setStartDate(futureDate.toISOString().split('T')[0]);
+        console.log("Random date set to:", futureDate.toISOString().split('T')[0]);
+    }
+
+    useEffect(() => {
+        const count = windowWidth < 600 ? 1 : windowWidth < 768 ? 2 : 4;
+        setColumnCount(count);
+    }, [windowWidth])
+
+    useEffect(() => {
+        getPicture();
+
+    }, [startDate])
+
     return (
-      <View style={{flex: 1, flexDirection: 'column', padding: 2, margin: 2, gap: 2, backgroundColor:'#7dd3fc'}} >
-        <View style={{flexDirection: 'row', alignItems: 'center', margin: 2}} >
+      <View style={{flex: 1, flexDirection: 'column', padding: 2, margin: 2, gap: 2, backgroundColor:'#7dd3fc00'}} >
+        <View style={{flexDirection: 'row', width: '100%', alignItems: 'center', justifyContent:'space-between', margin: 4}} >
             { Platform.OS !== 'web' 
                 ? <NativeDatePicker 
                     isoStringDate={startDate} 
@@ -61,22 +77,19 @@ export default function Apod() {
                     />
                 : <WebDatePicker onChange={(e) => setStartDate(e.target.value)} />
             }
-            <Pressable 
+            <TouchableOpacity 
                 disabled={!startDate}
-                onPress={getPicture} 
-                style={{marginLeft: 8, padding: 4, borderWidth: 1, borderColor: 'gray', borderRadius: 4}}
+                onPress={showRandomPicture} 
+                style={{marginRight: 8, padding: 4, borderWidth: 1, backgroundColor: '#4af', borderColor: 'lightgray', borderRadius: 4}}
             >
-                <Text>Get Pictures</Text>
-            </Pressable>
+                <Text>Random Pictures</Text>
+            </TouchableOpacity>
         </View>
-        
-        <FlatList numColumns={1} style={{height: '100%', padding: 4, backgroundColor:'#7dd3fc'}}
+        <FlatList key={columnCount.toString()} numColumns={columnCount} style={{height: '100%', padding: 4, backgroundColor:'#7dd3fc'}}
             data={apod}
-            keyExtractor={item => item.date}
+            keyExtractor={item => item.date} 
             renderItem={({item}) => (
-                <Pressable onPress={() => handleApodClick(item)} >
-                    <ApodItem item={item} />
-                </Pressable>
+                <ApodItem item={item} handleClick={() => handleVideoClick(item)} />
             )}>
         </FlatList>
       </View>  
@@ -92,7 +105,7 @@ const styles = StyleSheet.create({
       overflow: 'hidden',
       padding: 4,
       gap: 4,
-      borderColor: 'gray',
+      borderColor: 'lightgray',
       borderRadius: 8,
       borderWidth: 1,
       margin: 2,

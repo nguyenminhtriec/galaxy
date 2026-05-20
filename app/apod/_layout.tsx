@@ -20,8 +20,8 @@ export default function ApodLayout() {
                     </Link>
                 }} 
             />
-            <Text style={{fontSize:12, fontStyle:'italic', textAlign: 'center', backgroundColor:'gray', color:'#13a'}}>
-                "In a good book, the best is between the lines." -- Swedish Proverb
+            <Text style={{paddingVertical: 4, fontSize:11, fontStyle:'italic', textAlign: 'center', backgroundColor:'#f4f', color:'#ddd'}}>
+                "Look up at the stars and not down at your feet." — Stephen Hawking
             </Text>                  
         </ApodContextProvider>
     )   

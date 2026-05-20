@@ -1,15 +1,16 @@
 
-import { useApod } from "@/lib/apod-context";
-import { Text, ScrollView,  StyleSheet } from "react-native";
-import { ApodItem } from "@/components/ApodItem";
+import { useVideo } from "@/lib/apod-context";
+import { View,  StyleSheet } from "react-native";
+import { VideoPlayer } from "@/components/VideoPlayer";
 
 export default function ApodDetail() {
-    const { selectedApod } = useApod(); 
-    console.log("Selected APOD in detail view", selectedApod);
+    const { selectedVideo } = useVideo();
+    console.log("Selected video URL:", selectedVideo);
+    const isMp4 = selectedVideo?.endsWith('.mp4');
     return (
-        <ScrollView style={styles.container} scrollEnabled={true}>
-            {selectedApod ? <ApodItem item={selectedApod} /> : <Text>No APOD selected</Text>}
-        </ScrollView>
+        <View style={styles.container} >
+            {isMp4 && <VideoPlayer src={selectedVideo!} />}
+        </View>
     )
 }
 
@@ -18,6 +19,7 @@ const styles = StyleSheet.create({
       flex: 1,
       padding: 4,
       backgroundColor: '#146f',
+      overflow: 'hidden',
     }, 
 })
 

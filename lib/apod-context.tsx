@@ -1,27 +1,25 @@
 
 import { createContext, useContext, useState } from "react";
-import { type Apod } from "@/lib/apod-types";
-
 
 interface ApodContextProps {
-    selectedApod?: Apod,
-    setSelectedApod: (apod: Apod) => void,
+    selectedVideo?: string,
+    setSelectedVideo: (videoTitle: string) => void,
 }
 
 const initial: ApodContextProps = 
     {
-        selectedApod: undefined,
-        setSelectedApod: (_: Apod) => {},
+        selectedVideo: undefined,
+        setSelectedVideo: (videoTitle: string) => {},
     }
 
 export const ApodContext = createContext<ApodContextProps>(initial);
 
-export const useApod = () => useContext(ApodContext);
+export const useVideo = () => useContext(ApodContext);
 
 export function ApodContextProvider({children}: {children: React.ReactNode}) {
-    const [selectedApod, setSelectedApod] = useState<Apod>();
+    const [selectedVideo, setSelectedVideo] = useState<string>();
     return (
-        <ApodContext value={{selectedApod, setSelectedApod}}>
+        <ApodContext value={{selectedVideo, setSelectedVideo}}>
             {children}
         </ApodContext>
     )

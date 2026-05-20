@@ -7,7 +7,7 @@ export async function POST(req: Request) {
 
     const url = `${baseUrl}?${params.toString()}`
     console.log("Getting data from", url);
-    const response = await fetch(url, {cache: "force-cache"});
+    const response = await fetch(url, {});
     const data = await response.json();
 
     if (!response.ok) {

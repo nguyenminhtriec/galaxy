@@ -22,6 +22,6 @@ export function VideoPlayer({src}: {src: string}) {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  video: { width: '100%', height: 250 },
+  video: { width: '100%', maxWidth: 480, height: 300 },
 });
 
