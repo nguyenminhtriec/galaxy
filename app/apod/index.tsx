@@ -1,7 +1,7 @@
 
 'use client';
 
-import { View, Text, TouchableOpacity, StyleSheet, FlatList, Platform} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, Platform, Alert} from "react-native";
 import { WebDatePicker, NativeDatePicker} from "@/components/MyDatePicker";
 import { type Apod } from "@/lib/apod-types";
 import { ApodItem } from "@/components/ApodItem";
@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useVideo } from "@/lib/apod-context";
 import { useRouter } from "expo-router";
 import { useWindowDimensions } from 'react-native';
+import { getRandomDate } from "@/lib/helper";
 // import { ChevronRight, ChevronDown } from "lucide-react";
 
 export default function Apod() {
@@ -45,10 +46,7 @@ export default function Apod() {
     }
 
     const showRandomPicture = () => {
-        let futureDate = new Date("2030-01-01");
-        futureDate.setDate(futureDate.getDate() + Math.floor(Math.random() * 365));
-        setStartDate(futureDate.toISOString().split('T')[0]);
-        console.log("Random date set to:", futureDate.toISOString().split('T')[0]);
+        setStartDate(getRandomDate());
     }
 
     useEffect(() => {
@@ -58,7 +56,6 @@ export default function Apod() {
 
     useEffect(() => {
         getPicture();
-
     }, [startDate])
 
     return (
@@ -75,7 +72,9 @@ export default function Apod() {
                         setShowingCalendar(false);
                     }} 
                     />
-                : <WebDatePicker onChange={(e) => setStartDate(e.target.value)} />
+                : <WebDatePicker 
+                    isoStringDate={startDate}
+                    onChange={(e) => setStartDate(e.target.value)} />
             }
             <TouchableOpacity 
                 disabled={!startDate}

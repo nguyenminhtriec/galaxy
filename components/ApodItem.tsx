@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import {Text, View, Image, TouchableOpacity, StyleSheet, Platform, Pressable} from "react-native";
 import { VideoPlayer} from "@/components/VideoPlayer";
 import EmbedFrame from "@/components/EmbedFrame";
@@ -9,22 +9,11 @@ import { Link } from "expo-router";
 
 export function ApodItem({ item, handleClick }: { item: Apod, handleClick: () => void }) {
     const [desc, setDesc] = useState(false);
-    // const isVideoMp4 = item.media_type === 'video' && item.url.endsWith('.mp4');
 
     return (
         <View style={styles.container} >
             <Text style={styles.title}>{item.title}</Text>
             <Text style={{marginBottom: 4}}>{item.date}</Text>
-            {/* {isVideoMp4
-            ? <video controls className="w-full">
-                <source src={item.url} type="video/mp4" />
-                Your browser does not support the video tag.
-            </video>
-            : 
-            item.media_type === 'video'
-                ? <iframe  src= {item.url} title={item.title} />
-                : <img src={item.url} className="size-auto" />
-            } */}
             <ApodMedia item={item} handleClick={handleClick} />
             <View style={{ marginVertical: 8 }} >
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }} >
@@ -41,9 +30,11 @@ export function ApodItem({ item, handleClick }: { item: Apod, handleClick: () =>
 }
 
 const ApodMedia = ({ item, handleClick }: { item: Apod, handleClick: () => void }) => {
-    const isVideoMp4 = item.url.endsWith('.mp4');
+    const isVideoMp4 = item.url?.endsWith('.mp4');
     if (item.media_type === 'image') {
-        return <Image source={{ uri: item.url }} style={{ width: '100%', height: 400 }} />
+        return <Suspense fallback={<Text>Loading image...</Text>}>
+                  <Image source={{ uri: item.url }} style={{ width: '100%', height: 300, borderRadius: 8 }} />
+            </Suspense>
     }
     if (Platform.OS !== 'web') {
         return (

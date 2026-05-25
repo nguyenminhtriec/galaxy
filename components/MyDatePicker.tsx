@@ -4,16 +4,18 @@ import DateTimePicker, {DateTimePickerChangeEvent} from '@react-native-community
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 type WebDatePickerProps = {
+    isoStringDate: string,
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
 }
 
-export function WebDatePicker({onChange}: WebDatePickerProps) {    
+export function WebDatePicker({isoStringDate, onChange}: WebDatePickerProps) {    
     return (
         <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center', 
         padding: 4, gap: 16, borderWidth:.5, borderRadius:8, borderColor:'lightgray'}}>        
             <input 
-                type="date" 
-                defaultValue="2026-01-01"
+                type="date"
+                value={isoStringDate}
+                // defaultValue="2026-01-01"
                 onChange={onChange}
                 style={{fontSize: 14}}
             />
