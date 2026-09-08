@@ -13,10 +13,10 @@ export default function Index() {
         
       }}
     >
-      <Image source={require('@/assets/images/icon.png')} alt="A bee" style={{ width: 100, height: 100 }} />
+      <Image source={require('@/assets/images/bee.png')} alt="A Tiny bee" style={{ width: 150, height: 100, borderRadius: 8 }} />
       <Text style={{color:'#ededed', fontSize: 16}}>{poem}</Text>
-      <Link href="./apod" style={{ padding: 8, backgroundColor: '#7dd3fc', borderRadius: 4 }}>
-        View APOD
+      <Link href="./apod" style={{ padding: 8, backgroundColor: '#116688', borderColor: '#8aa7b4', borderRadius: 4 }}>
+        <Text style={{ color: '#3fe' }}>View APOD</Text>
       </Link>
       
     </View>

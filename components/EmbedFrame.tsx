@@ -5,7 +5,7 @@ import { Platform, View } from 'react-native';
 export default function EmbedFrame({ url }: { url: string }) {
   // if (Platform.OS === 'web') {
     return (
-      <View style={{ maxWidth: 640, height: 400, overflow: 'hidden', borderRadius: 8 }}>
+      <View style={{ width: '100%', maxHeight: 500, overflow: 'hidden', borderRadius: 8 }}>
         <iframe
           src={url}
           width="100%"

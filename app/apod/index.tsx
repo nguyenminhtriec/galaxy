@@ -1,15 +1,16 @@
 
 'use client';
 
-import { View, Text, TouchableOpacity, StyleSheet, FlatList, Platform, Alert} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, Platform} from "react-native";
 import { WebDatePicker, NativeDatePicker} from "@/components/MyDatePicker";
 import { type Apod } from "@/lib/apod-types";
 import { ApodItem } from "@/components/ApodItem";
 import { useEffect, useState } from "react";
-import { useVideo } from "@/lib/apod-context";
+import { useApod } from "@/lib/apod-context";
 import { useRouter } from "expo-router";
 import { useWindowDimensions } from 'react-native';
 import { getRandomDate } from "@/lib/helper";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 // import { ChevronRight, ChevronDown } from "lucide-react";
 
 export default function Apod() {
@@ -17,13 +18,14 @@ export default function Apod() {
     const [apod, setApod] = useState<Apod[]>([]);
     const [showingCalendar, setShowingCalendar] = useState(false);
     const router = useRouter();
-    const { setSelectedVideo } = useVideo();
+    const { setSelectedItem } = useApod();
 
     const windowWidth = useWindowDimensions().width;
     const [columnCount, setColumnCount] = useState(1);
     
 
     const getPicture = async () => {
+        setApod([]);
         const apodResponse = await fetch(`/apod/apod`, {
             method: 'POST',
             headers: {
@@ -41,12 +43,12 @@ export default function Apod() {
     }
 
     const handleVideoClick = (apod: Apod) => {
-        setSelectedVideo(apod.url);
+        setSelectedItem(apod);
         router.push(`./apod/${apod.date}`);
     }
 
     const showRandomPicture = () => {
-        setStartDate(getRandomDate());
+        setStartDate(getRandomDate);
     }
 
     useEffect(() => {
@@ -77,7 +79,7 @@ export default function Apod() {
                     onChange={(e) => setStartDate(e.target.value)} />
             }
             <TouchableOpacity 
-                disabled={!startDate}
+                // disabled={!startDate}
                 onPress={showRandomPicture} 
                 style={{marginRight: 8, padding: 4, borderWidth: 1, backgroundColor: '#4af', borderColor: 'lightgray', borderRadius: 4}}
             >

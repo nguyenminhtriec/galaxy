@@ -17,9 +17,11 @@ export async function POST(req: Request) {
 }
 
 function harmonizeParams(date: string, offset=3) {
-    const apiKey: string = process.env.NASA_API_KEY || '';
+    const apiKey: string = process.env.NASA_API_KEY || '';   
+    // if (date === '') return new URLSearchParams({ api_key: apiKey, count: '4' });
     const stamp = Date.parse(date);
     const params = new URLSearchParams();
+
     if (stamp > Date.now() || stamp < Date.parse("1995-06-16")) {
         const randomDate = getRandomDate();
         params.set('start_date', randomDate);

@@ -1,10 +1,11 @@
 
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import {Text, View, Image, TouchableOpacity, StyleSheet, Platform, Pressable} from "react-native";
 import { VideoPlayer} from "@/components/VideoPlayer";
 import EmbedFrame from "@/components/EmbedFrame";
 import { type Apod } from "@/lib/apod-types";
 import { Link } from "expo-router";
+import { Suspense } from "react";
 
 
 export function ApodItem({ item, handleClick }: { item: Apod, handleClick: () => void }) {
@@ -14,7 +15,9 @@ export function ApodItem({ item, handleClick }: { item: Apod, handleClick: () =>
         <View style={styles.container} >
             <Text style={styles.title}>{item.title}</Text>
             <Text style={{marginBottom: 4}}>{item.date}</Text>
-            <ApodMedia item={item} handleClick={handleClick} />
+            <Suspense fallback={<Text>Loading...</Text>} >
+                <ApodMedia item={item} handleClick={handleClick} />
+            </Suspense>
             <View style={{ marginVertical: 8 }} >
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }} >
                     <Text style={{ marginRight: 4 }}>Explanation</Text>
@@ -32,16 +35,17 @@ export function ApodItem({ item, handleClick }: { item: Apod, handleClick: () =>
 const ApodMedia = ({ item, handleClick }: { item: Apod, handleClick: () => void }) => {
     const isVideoMp4 = item.url?.endsWith('.mp4');
     if (item.media_type === 'image') {
-        return <Suspense fallback={<Text>Loading image...</Text>}>
-                  <Image source={{ uri: item.url }} style={{ width: '100%', height: 300, borderRadius: 8 }} />
-            </Suspense>
+        return <Image source={{ uri: item.url || '' }} style={{ width: '100%', height: 300, borderRadius: 8 }} />
+            
     }
     if (Platform.OS !== 'web') {
         return (
             <View>
                 {isVideoMp4
-                    ? <Text onPress={handleClick} style={styles.touchableText}> Play Video MP4</Text>
-                    : <Link href={`https://www.youtube.com/watch?v=${item.url.split("/").pop()?.slice(0, 11)}`}><Text style={styles.touchableText}>Watch Video on Youtube</Text></Link>
+                    ? <Text style={styles.touchableText} onPress={handleClick}>Play Video MP4 </Text>
+                    : <Link href={`https://www.youtube.com/watch?v=${item.url?.split("/").pop()?.slice(0, 11)}`}>
+                        <Text style={styles.touchableText}>Watch Video on Youtube</Text>
+                    </Link>
                 }
             </View>
         )
@@ -49,8 +53,8 @@ const ApodMedia = ({ item, handleClick }: { item: Apod, handleClick: () => void 
     return (
         <View>
             {isVideoMp4
-                ? <VideoPlayer src={item.url} />
-                : <EmbedFrame url={item.url} />                  
+                ? <VideoPlayer src={item.url || ''} />
+                : <EmbedFrame url={item.url || ''} />                  
             }
         </View>
     )
@@ -59,7 +63,7 @@ const ApodMedia = ({ item, handleClick }: { item: Apod, handleClick: () => void 
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#cdcdcd',
+      backgroundColor: '#e6d8d6',
       alignItems: 'flex-start',
       justifyContent: 'flex-start',
       overflow: 'hidden',

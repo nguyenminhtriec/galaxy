@@ -34,7 +34,7 @@ export function NativeDatePicker({ isoStringDate, handleChange, handlePress, isS
     return (
         <View style={styles.container}>           
             <Pressable style={styles.calendar} onPress={handlePress}  >
-                <Text style={{}} >{new Date(isoStringDate).toISOString().slice(0, 10)}</Text>
+                <Text style={{}} >{ isoStringDate || 'Select Date' }</Text>
                 <Ionicons name='calendar' size={24} color='teal' />
             </Pressable>               
         { isShowingCalendar &&    
