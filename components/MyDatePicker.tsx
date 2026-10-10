@@ -1,6 +1,6 @@
 
 import {View, Text, Pressable, StyleSheet, GestureResponderEvent} from'react-native';
-import DateTimePicker, {DateTimePickerChangeEvent} from '@react-native-community/datetimepicker';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 type WebDatePickerProps = {
@@ -25,7 +25,7 @@ export function WebDatePicker({isoStringDate, onChange}: WebDatePickerProps) {
 
 type NativeDatePickerProps = {
     isoStringDate: string,
-    handleChange: (e: DateTimePickerChangeEvent , date?: Date) => void,
+    handleChange: (e: DateTimePickerEvent , date?: Date) => void,
     handlePress: (e: GestureResponderEvent) => void,
     isShowingCalendar?: boolean
 }
@@ -42,7 +42,7 @@ export function NativeDatePicker({ isoStringDate, handleChange, handlePress, isS
                 value={new Date(isoStringDate)}
                 mode='date'
                 display='default'
-                onValueChange={handleChange}
+                onChange={handleChange}
             />
         }    
         </View>

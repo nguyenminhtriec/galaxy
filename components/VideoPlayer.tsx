@@ -24,4 +24,3 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   video: { width: '100%', maxHeight: 500 },
 });
-

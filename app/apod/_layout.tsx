@@ -21,7 +21,7 @@ export default function ApodLayout() {
                 }} 
             />
             <Text style={{paddingVertical: 4, fontSize:11, fontStyle:'italic', textAlign: 'center', backgroundColor:'#f4f', color:'#ffa'}}>
-                "Look up at the stars and not down at your feet." — Stephen Hawking
+                "Look up at the stars, not down at your feet." — Stephen Hawking
             </Text>                  
         </ApodContextProvider>
     )   

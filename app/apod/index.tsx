@@ -10,7 +10,6 @@ import { useApod } from "@/lib/apod-context";
 import { useRouter } from "expo-router";
 import { useWindowDimensions } from 'react-native';
 import { getRandomDate } from "@/lib/helper";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 // import { ChevronRight, ChevronDown } from "lucide-react";
 
 export default function Apod() {
@@ -23,7 +22,6 @@ export default function Apod() {
     const windowWidth = useWindowDimensions().width;
     const [columnCount, setColumnCount] = useState(1);
     
-
     const getPicture = async () => {
         setApod([]);
         const apodResponse = await fetch(`/apod/apod`, {

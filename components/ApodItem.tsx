@@ -16,7 +16,7 @@ export function ApodItem({ item, handleClick }: { item: Apod, handleClick: () =>
             <Text style={styles.title}>{item.title}</Text>
             <Text style={{marginBottom: 4}}>{item.date}</Text>
             <Suspense fallback={<Text>Loading...</Text>} >
-                <ApodMedia item={item} handleClick={handleClick} />
+                <Image source={{ uri: item.hdurl || '' }} style={{ width: '100%', height: 300, borderRadius: 8 }} />
             </Suspense>
             <View style={{ marginVertical: 8 }} >
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }} >
@@ -25,9 +25,10 @@ export function ApodItem({ item, handleClick }: { item: Apod, handleClick: () =>
                         <Text>{!desc ? "Open" : "Close"}</Text>
                     </TouchableOpacity>
                 </View>
-                <Text>{desc && item.explanation}</Text>
+                {desc && <div dangerouslySetInnerHTML={{__html:item.explanation ||''}} ></div>}
             </View>
-            {item.copyright ? <Text>&copy; {item.copyright}</Text> : <Text>Source: NASA OPEN API</Text>}
+            {/* {item.copyright ? <Text>&copy; {item.copyright}</Text> : <Text>Source: NASA OPEN API</Text>} */}
+            <div dangerouslySetInnerHTML={{__html: item.copyright ||''}}></div>
         </View>
     )
 }

@@ -17,21 +17,17 @@ export async function POST(req: Request) {
 }
 
 function harmonizeParams(date: string, offset=3) {
-    const apiKey: string = process.env.NASA_API_KEY || '';   
-    // if (date === '') return new URLSearchParams({ api_key: apiKey, count: '4' });
-    const stamp = Date.parse(date);
+    const apiKey: string = process.env.APOD_API_KEY || '';   
     const params = new URLSearchParams();
+    const endDate = dateOffset(date, 3);
+    const simpleEndDate = simpleDate(endDate);
+    const startDate = new Date(date).toISOString();
+    const simpleStartDate = simpleDate(startDate);
 
-    if (stamp > Date.now() || stamp < Date.parse("1995-06-16")) {
-        const randomDate = getRandomDate();
-        params.set('start_date', randomDate);
-        params.set('end_date', dateOffset(randomDate, offset));
-        params.set('api_key', apiKey);
-    } else {
-        params.set('start_date', date);
-        params.set('end_date', dateOffset(date, offset));
-        params.set('api_key', apiKey);
-    }
+    params.set('date_from', simpleStartDate);
+    params.set('date_to', simpleEndDate);
+    params.set('api_key', apiKey);
+    
     return params;
 }
 
@@ -40,4 +36,11 @@ function dateOffset(date: string, offset: number) {
     const offsetMillis = offset * 24 * 3600 * 1000;
     const newStamp = Math.min(stamp + offsetMillis, Date.now());
     return new Date(newStamp).toISOString().split('T')[0];
+}
+
+// Convert ISO date string to simple form (YYMMDD)
+function simpleDate(dateStr: string) {
+    const isoDate = new Date(dateStr).toISOString().split('T')[0];
+    const simple = isoDate.split('-').join('').substring(2)
+    return simple
 }
